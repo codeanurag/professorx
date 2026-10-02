@@ -1,0 +1,10 @@
+{
+  "name": "professorx",
+  "version": "1.0.0",
+  "description": "Local-first comprehension checkpoints for coding agents",
+  "main": "lib/state.js",
+  "bin": { "professorx": "bin/professorx.js" },
+  "scripts": { "test": "node --test" },
+  "engines": { "node": ">=20" },
+  "license": "MIT"
+}

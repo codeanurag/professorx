@@ -1,0 +1,5 @@
+'use strict';
+const fs = require('node:fs'); const os = require('node:os'); const path = require('node:path'); const { spawnSync } = require('node:child_process'); const { init } = require('../lib/commands/init');
+function initRepo(root, force = false) { return init(root, force, { ...process.env, HOME: path.join(root, '.test-home'), PATH: path.join(root, '.empty-bin') }); }
+function repo() { const root = fs.mkdtempSync(path.join(os.tmpdir(), 'px-test-')); const env = { ...process.env, GIT_AUTHOR_NAME: 'Sample', GIT_AUTHOR_EMAIL: 'sample@example.invalid', GIT_COMMITTER_NAME: 'Sample', GIT_COMMITTER_EMAIL: 'sample@example.invalid' }; const run = (args, cwd = root) => { const r = spawnSync('git', args, { cwd, env, encoding: 'utf8' }); if (r.status) throw new Error(r.stderr); return r.stdout.trim(); }; run(['init', '-q']); fs.writeFileSync(path.join(root, 'base.txt'), 'base\n'); run(['add', 'base.txt']); run(['commit', '-qm', 'base']); return { root, run, cleanup: () => fs.rmSync(root, { recursive: true, force: true }) }; }
+module.exports = { repo, initRepo };

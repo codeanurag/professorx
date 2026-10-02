@@ -1,0 +1,3 @@
+'use strict';
+const test = require('node:test'); const assert = require('node:assert/strict'); const { buildQuizInstruction } = require('../lib/promptTemplate');
+test('quiz prompt is agent-neutral and uses captured changes', () => { const prompt = buildQuizInstruction({ diff: { totalChangedLines: 100, filesChanged: ['src/example.js'], fileCount: 1, insertions: 90, deletions: 10, diff: '+const example = true;', truncated: false } }); assert.match(prompt, /Ask 5 question/); assert.match(prompt, /src\/example.js/); assert.match(prompt, /literally present in the captured diff/); assert.doesNotMatch(prompt, /Claude Code/); });
